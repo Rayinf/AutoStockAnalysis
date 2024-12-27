@@ -17,6 +17,10 @@
 ### **系统目标**
 
 - 解析 Akshare 的接口文档（股票、基金、期货等），生成多个 Agent，分别负责不同领域的数据查询。
+  - 股票工具数量：310 (https://akshare.akfamily.xyz/data/stock/stock.html)
+  - 期货工具数量：44 (https://akshare.akfamily.xyz/data/futures/futures.html) 
+  - 公募基金工具数量：58 (https://akshare.akfamily.xyz/data/fund/fund_public.html)
+  - 私募基金工具数量：14 (https://akshare.akfamily.xyz/data/fund/fund_private.html)
 - 基于用户的自然语言输入，自动推理选择合适的 Agent 和接口方法。
 - 自动生成查询代码，调用 Akshare 接口并返回结果。
 - 提供易于扩展的 Python 实现，方便后续新增功能或接口。
@@ -38,6 +42,8 @@
 👨：螺纹钢，现在是什么价格？
 🤖：螺纹钢期货市场的当前价格： 3266.0， 最新日期： 2024-12-27
 ```
+
+![gpt-4o-2024-08-06](https://shawnsang.github.io/experience/assets/images/posts/ai/akshare/gpt-4o-2024-08-06.gif)
 
 ---
 
@@ -140,3 +146,12 @@ python main.py
 | gpt-4o-2024-08-06 | 一轮得到结果 | 一轮得到结果 | 二轮得到结果 |
 | claude-3-haiku-20240307 | 多轮未得到结果 | 出错  | NA |
 | qwen2.5-32b-instruct | 多轮得到结果 | 多轮得到结果 | 找到工具，多轮没有得到结果 |
+
+
+![o1-mini-2024-09-12](/experience/assets/images/posts/ai/akshare/o1-mini-2024-09-12.mp4)
+
+![gpt-4o-2024-08-06](/experience/assets/images/posts/ai/akshare/gpt-4o-2024-08-06.mp4)
+
+![claude-3-haiku-20240307](/experience/assets/images/posts/ai/akshare/claude-3-haiku-20240307.mp4)
+
+![qwen2.5-32b-instruct](/experience/assets/images/posts/ai/akshare/qwen2.5-32b-instruct.mp4)
