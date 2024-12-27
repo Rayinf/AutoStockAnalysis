@@ -21,7 +21,7 @@ class ChatModelFactory:
                 model=ollama_model,
                 temperature=cls.model_params["temperature"],
             )
-        elif "gpt" in model_name:
+        elif "gpt" in model_name or "o1" in model_name:
             if not use_azure:
                 return ChatOpenAI(model=model_name, **cls.model_params)
             else:
@@ -30,6 +30,13 @@ class ChatModelFactory:
                     api_version="2024-05-01-preview",
                     **cls.model_params
                 )
+        elif model_name.startswith("qwen"):
+            return ChatOpenAI(
+                api_key=os.getenv("DASHSCOPE_API_KEY"),
+                base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+                model=model_name,  # qwen-turbo, qwen-plus, qwen-max
+                **cls.model_params
+            )
         elif model_name == "deepseek":
             # 换成开源模型试试
             # https://siliconflow.cn/

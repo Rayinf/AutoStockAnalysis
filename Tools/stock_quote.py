@@ -6,13 +6,6 @@
     - 增加正则表达式 data_sample_pattern，用于匹配 数据示例 部分
     - 捕获 数据示例 中的内容并添加到 Tool 对象中
 
-扩展 Tool 类：
-    - 新增 data_sample 属性，用于存储数据示例内容
-    - __repr__ 方法中加入对 data_sample 的展示
-
-数据示例完整性检查：
-    - 如果数据示例数量与接口数量不一致，可以在 zip 之前补全 data_samples
-
 输出结果：
 运行脚本后，每个工具都会完整记录以下信息：
     - 接口名称
@@ -50,11 +43,12 @@ class PythonCodeParser(BaseOutputParser):
 
 class StockTool:
     """单个股票工具的数据类"""
-    def __init__(self, name: str, description: str, example: str, data_sample: str):
+    def __init__(self, name: str, description: str, example: str, data_sample: str, output_params: str = None):
         self.name = name
         self.description = description
         self.example = example
         self.data_sample = data_sample
+        self.output_params = output_params
 
     @classmethod
     def extract_tools_from_file(cls, file_path: str) -> List[BaseTool]:
@@ -73,39 +67,49 @@ class StockTool:
                 desc_match = re.search(r"描述:\s*(.*?)(?=\n\n|输入参数)", section, re.DOTALL)
                 example_match = re.search(r"接口示例\n\n```python\n(.*?)\n```", section, re.DOTALL)
                 data_match = re.search(r"数据示例\n\n```\n(.*?)\n```", section, re.DOTALL)
+                output_match = re.search(r"输出参数.*?\n\|(.*?)(?=\n\n)", section, re.DOTALL)
 
                 if all([name_match, desc_match, example_match, data_match]):
                     name = name_match.group(1).strip()
                     description = desc_match.group(1).strip()
                     example = example_match.group(1).strip()
                     data_sample = data_match.group(1).strip()
-
-                    # 检查是否有输入参数
-                    has_params = False
-                    params_section = re.search(r"输入参数.*?\n\|(.*?)(?=\n\n)", section, re.DOTALL)
-                    if params_section:
-                        params_content = params_section.group(1)
-                        has_params = not all(cell.strip() == '-' for cell in params_content.split('|') if cell.strip())
+                    
+                    # 处理输出参数
+                    output_params = ""
+                    if output_match:
+                        # 解析输出参数表格内容
+                        params_content = output_match.group(1)
+                        params_rows = [row.strip() for row in params_content.split('\n') if row.strip()]
+                        output_params = "\n输出参数：\n" + "\n".join(
+                            f"- {param.strip()}" 
+                            for param in params_rows 
+                            if not all(cell.strip() == '-' for cell in param.split('|'))
+                        )
+                        # 将输出参数添加到描述中
+                        description = f"{description}\n{output_params}"
 
                     # 创建工具实例
                     tool_instance = cls(
                         name=name,
                         description=description,
                         example=example,
-                        data_sample=data_sample
+                        data_sample=data_sample,
+                        output_params=output_params
                     )
 
-                    # 创建 Langchain Tool - 只使用名称和描述
+                    # 创建 Langchain Tool
                     tool = Tool(
                         name=name,
-                        description=description,  # 只使用描述部分
+                        description=description,
                         func=lambda x="", tool=tool_instance: tool_instance.run(x)
                     )
                     
                     # 将完整信息存储在 tool 对象的 metadata 中
                     tool.metadata = {
                         "example": example,
-                        "data_sample": data_sample
+                        "data_sample": data_sample,
+                        "output_params": output_params
                     }
                     
                     tools.append(tool)
@@ -207,11 +211,20 @@ class StockAnalyser:
             print(f"详细错误信息:\n{error_details}")
             return f"生成代码时发生错误: {str(e)}"
 
-    def as_tool(self):
-        return StructuredTool.from_function(
-            func=self.analyse,
-            name="AnalyseStock",
-            description=self.__class__.__doc__.replace("\n", ""),
+    def as_tool(self, name: str = None, description: str = None) -> Tool:
+        """将当前实例转换为 Langchain Tool
+        
+        Args:
+            name (str, optional): 工具名称. 默认为 "stock_analysis"
+            description (str, optional): 工具描述. 默认使用类文档
+            
+        Returns:
+            Tool: Langchain Tool 实例
+        """
+        return Tool(
+            name=name or "stock_analysis",
+            description=description or self.__class__.__doc__.replace("\n", ""),
+            func=self.analyse
         )
 
 # 导出工具类
