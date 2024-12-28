@@ -48,6 +48,14 @@ class ChatModelFactory:
                 openai_api_base="https://api.siliconflow.cn/v1",  # 平台 API 地址
                 **cls.model_params,
             )
+        elif model_name == "deepseek-chat":
+            # Official DeepSeek API implementation
+            return ChatOpenAI(
+                model="deepseek-chat",
+                api_key=os.getenv("DEEPSEEK_API_KEY"),
+                base_url="https://api.deepseek.com/v1",
+                **cls.model_params,
+            )
 
     @classmethod
     def get_default_model(cls):

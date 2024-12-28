@@ -146,6 +146,7 @@ python main.py
 | gpt-4o-2024-08-06 | 一轮得到结果 | 一轮得到结果 | 二轮得到结果 |
 | claude-3-haiku-20240307 | 多轮未得到结果 | 出错  | NA |
 | qwen2.5-32b-instruct | 多轮得到结果 | 多轮得到结果 | 找到工具，多轮没有得到结果 |
+| deepseek-v3 | 一轮得到结果 | 一轮得到结果 | 一轮得到结果 |
 
 
 ![o1-mini-2024-09-12](https://shawnsang.github.io/experience/assets/images/posts/ai/akshare/o1-mini-2024-09-12.mp4)
@@ -155,3 +156,5 @@ python main.py
 ![claude-3-haiku-20240307](https://shawnsang.github.io/experience/assets/images/posts/ai/akshare/claude-3-haiku-20240307.mp4)
 
 ![qwen2.5-32b-instruct](https://shawnsang.github.io/experience/assets/images/posts/ai/akshare/qwen2.5-32b-instruct.mp4)
+
+![deepseek-v3](https://shawnsang.github.io/experience/assets/images/posts/ai/akshare/deepseek-v3.mp4)
