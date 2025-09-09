@@ -5,6 +5,7 @@ import StockPoolPanel from './StockPoolPanel'
 import OpeningPrediction from './OpeningPrediction'
 import PortfolioManager from './PortfolioManager'
 import ReactECharts from 'echarts-for-react'
+import { getApiBaseUrl, buildApiUrl } from './config/api'
 
 type Mode = 'auto' | 'quick' | 'llm'
 type Tab = 'fixed' | 'llm' | 'strategy' | 'prediction' | 'portfolio'
@@ -132,7 +133,7 @@ function App() {
           analyses: fixedTypes.join(','),
           lookback_days: String(lookbackDays)
         })
-        const url = `http://127.0.0.1:8000/api/qlib/features_stream?${params.toString()}`
+        const url = `${getApiBaseUrl()}/api/qlib/features_stream?${params.toString()}`
         console.log('SSE URL:', url)
         setLiveLogs(prev => [...prev, `🔗 连接SSE: ${url}`])
         await new Promise<void>((resolve, reject) => {
@@ -192,7 +193,7 @@ function App() {
                   setResult('Qlib因子已返回，正在生成预测与结构化结论…')
 
                   // 补发统一分析请求，获取预测/结构化/风险
-                  fetch('http://127.0.0.1:8000/api/qlib/analyse', {
+                  fetch(`${getApiBaseUrl()}/api/qlib/analyse`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -263,7 +264,7 @@ function App() {
             analyses: ['MA20','MACD','BOLL','OBV','ATR','REALTIME','TOPUP','TOPDOWN'].join(','),
             lookback_days: String(lookbackDays)
           })
-          const url = `http://127.0.0.1:8000/api/qlib/features_stream?${params.toString()}`
+          const url = `${getApiBaseUrl()}/api/qlib/features_stream?${params.toString()}`
           setLiveLogs(prev => [...prev, `🔗 连接SSE(LLM前置特征): ${url}`])
           await new Promise<void>((resolve) => {
             try {

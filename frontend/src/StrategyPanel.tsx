@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { getApiBaseUrl } from './config/api'
 
 interface StrategyConfig {
   buy_threshold: number
@@ -170,7 +171,7 @@ export const StrategyPanel: React.FC<StrategyPanelProps> = ({ selectedSymbols })
         params.append('days', days.toString())
       }
       
-      const response = await fetch(`http://127.0.0.1:8000/api/strategy/run_backtest?${params}`, {
+      const response = await fetch(`${getApiBaseUrl()}/api/strategy/run_backtest?${params}`, {
         method: 'POST'
       })
       
@@ -278,7 +279,7 @@ export const StrategyPanel: React.FC<StrategyPanelProps> = ({ selectedSymbols })
         params.append('end_date', endDate)
       }
       
-      const response = await fetch(`http://127.0.0.1:8000/api/strategy/optimize?${params}`, {
+      const response = await fetch(`${getApiBaseUrl()}/api/strategy/optimize?${params}`, {
         method: 'POST'
       })
       

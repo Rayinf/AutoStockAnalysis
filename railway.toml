@@ -3,15 +3,21 @@ builder = "dockerfile"
 dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "uvicorn app:app --host 0.0.0.0 --port $PORT"
+startCommand = "python app.py"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
 [env]
-# 这些环境变量需要在Railway控制台中设置
+# 生产环境配置
+ENVIRONMENT = "production"
+ALLOWED_ORIGINS = "https://your-username.github.io"
+PORT = "$PORT"
+
+# API Keys - 需要在Railway控制台中设置实际值
 # OPENAI_API_KEY = "your-openai-api-key"
 # ANTHROPIC_AUTH_TOKEN = "your-anthropic-token"
 # ANTHROPIC_BASE_URL = "https://anyrouter.top"
+# KIMI_API_KEY = "sk-oGiE4vyB6H21XOdVpsPiW1FdM3TnR0ERvCFqbKq3pK2Gc6sR"
 # MODEL_NAME = "gpt-4-turbo"
 
 [healthcheck]

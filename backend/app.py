@@ -6,6 +6,11 @@ import os
 
 load_dotenv(find_dotenv())
 
+# 生产环境配置
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
+ALLOWED_ORIGINS = os.getenv('ALLOWED_ORIGINS', '*').split(',')
+PORT = int(os.getenv('PORT', 8000))
+
 from Models.Factory import ChatModelFactory
 from Tools.stock_quote import StockAnalyser, StockTool
 from backend.qlib_provider import QlibProvider
@@ -44,7 +49,7 @@ app = FastAPI(title="Auto-GPT-Stock API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS if ENVIRONMENT == 'production' else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -3178,5 +3183,35 @@ async def fix_stock_names():
             "success": False,
             "error": f"修复股票名称失败: {str(e)}"
         })
+
+# 健康检查端点
+@app.get("/")
+async def root():
+    """根路径健康检查"""
+    return {
+        "message": "Auto-GPT-Stock API is running",
+        "version": "0.1.0",
+        "environment": ENVIRONMENT,
+        "status": "healthy"
+    }
+
+@app.get("/health")
+async def health_check():
+    """健康检查端点"""
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "environment": ENVIRONMENT
+    }
+
+# 启动配置
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "app:app",
+        host="0.0.0.0",
+        port=PORT,
+        reload=ENVIRONMENT == "development"
+    )
 
 

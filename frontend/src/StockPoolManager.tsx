@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { getApiBaseUrl } from './config/api'
 
 interface StockPool {
   name: string
@@ -22,7 +23,7 @@ export const StockPoolManager: React.FC<StockPoolManagerProps> = ({ onClose, onS
   // 加载股票池配置
   const loadStockPools = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/strategy/stock_pools')
+      const response = await fetch(`${getApiBaseUrl()}/api/strategy/stock_pools`)
       const data = await response.json()
       setStockPools(data.stock_pools || {})
     } catch (err) {
@@ -37,7 +38,7 @@ export const StockPoolManager: React.FC<StockPoolManagerProps> = ({ onClose, onS
     setError(null)
     
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/strategy/stock_pools', {
+      const response = await fetch(`${getApiBaseUrl()}/api/strategy/create_stock_pool`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +68,7 @@ export const StockPoolManager: React.FC<StockPoolManagerProps> = ({ onClose, onS
     }
     
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/strategy/stock_pools/${encodeURIComponent(poolName)}`, {
+      const response = await fetch(`${getApiBaseUrl()}/api/strategy/stock_pools/${encodeURIComponent(poolName)}`, {
         method: 'DELETE',
       })
       

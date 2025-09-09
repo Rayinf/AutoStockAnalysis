@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import StockPoolManager from './StockPoolManager'
+import { getApiBaseUrl } from './config/api'
 
 interface StockPool {
   name: string
@@ -43,8 +44,8 @@ export const StockPoolPanel: React.FC<StockPoolPanelProps> = ({
       console.log('正在加载股票池数据...')
       
       const [poolsRes, stocksRes] = await Promise.all([
-        fetch('http://127.0.0.1:8000/api/strategy/stock_pools'),
-        fetch('http://127.0.0.1:8000/api/strategy/available_stocks')
+        fetch(`${getApiBaseUrl()}/api/strategy/stock_pools`),
+        fetch(`${getApiBaseUrl()}/api/strategy/available_stocks`)
       ])
       
       if (!poolsRes.ok || !stocksRes.ok) {
@@ -90,7 +91,7 @@ export const StockPoolPanel: React.FC<StockPoolPanelProps> = ({
     setError(null)
     
     try {
-      let url = `http://127.0.0.1:8000/api/calibration/generate_real_data?symbols=${encodeURIComponent(selectedSymbols)}`
+      let url = `${getApiBaseUrl()}/api/calibration/generate_real_data?symbols=${encodeURIComponent(selectedSymbols)}`
       
       if (useCustomDateRange) {
         url += `&start_date=${startDate}&end_date=${endDate}`
