@@ -22,8 +22,11 @@ COPY backend/requirements.txt .
 # 安装Python依赖
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 复制后端代码
-COPY backend/ .
+# 复制整个项目代码
+COPY . .
+
+# 设置Python路径
+ENV PYTHONPATH=/app
 
 # 创建必要的目录
 RUN mkdir -p logs data
@@ -32,4 +35,4 @@ RUN mkdir -p logs data
 EXPOSE $PORT
 
 # 启动命令
-CMD ["python", "app.py"]
+CMD ["python", "-m", "uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000"]
