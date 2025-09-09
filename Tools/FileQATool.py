@@ -1,9 +1,9 @@
 from typing import List
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
-from langchain.document_loaders import PyMuPDFLoader
-from langchain.document_loaders.word_document import UnstructuredWordDocumentLoader
+from langchain_community.vectorstores import Chroma
+from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_community.document_loaders.word_document import UnstructuredWordDocumentLoader
 from langchain.chains import RetrievalQA
 
 from Models.Factory import ChatModelFactory, EmbeddingModelFactory

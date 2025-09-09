@@ -56,6 +56,14 @@ class ChatModelFactory:
                 base_url="https://api.deepseek.com/v1",
                 **cls.model_params,
             )
+        elif model_name == "kimi":
+            # Kimi API implementation
+            return ChatOpenAI(
+                model="kimi-k2-0711-preview",
+                api_key=os.getenv("MOONSHOT_API_KEY"),
+                base_url="https://api.moonshot.cn/v1",
+                **cls.model_params,
+            )
 
     @classmethod
     def get_default_model(cls):

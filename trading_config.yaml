@@ -1,0 +1,204 @@
+# 实盘交易配置文件
+
+# 策略参数（从回测系统移植）
+strategy:
+  buy_threshold: 0.6          # 买入概率阈值
+  sell_threshold: 0.4         # 卖出概率阈值
+  max_positions: 10           # 最大持仓股票数
+  position_size: 0.1          # 单股基础仓位比例 (10%)
+  initial_capital: 100000     # 初始资金
+  transaction_cost: 0.002     # 交易成本 (0.2%)
+
+# 风险控制参数
+risk_management:
+  stop_loss_threshold: 0.03         # 止损阈值 (3%)
+  max_single_position: 0.15         # 单股最大仓位 (15%)
+  max_sector_concentration: 0.3     # 单行业最大仓位 (30%)
+  max_holding_days: 15              # 最大持仓天数
+  max_daily_loss: 0.02              # 日最大亏损 (2%)
+  kelly_max_fraction: 0.25          # Kelly公式最大仓位 (25%)
+
+# 系统运行参数
+system:
+  data_update_interval: 60          # 数据更新间隔 (秒)
+  signal_check_interval: 300        # 信号检查间隔 (秒)
+  order_timeout: 300                # 订单超时时间 (秒)
+  market_open_time: "09:30"         # 市场开盘时间
+  market_close_time: "15:00"        # 市场收盘时间
+  pre_market_analysis_time: "09:00" # 盘前分析时间
+
+# 数据源配置
+data_source:
+  provider: "akshare"               # 数据提供商
+  real_time_update: true            # 实时数据更新
+  cache_enabled: true               # 启用数据缓存
+  cache_ttl: 300                    # 缓存生存时间 (秒)
+  history_days: 30                  # 历史数据天数
+
+# 监控股票池
+watchlist:
+  default_symbols:
+    - "000001"  # 平安银行
+    - "000002"  # 万科A
+    - "000858"  # 五粮液
+    - "600519"  # 贵州茅台
+    - "600036"  # 招商银行
+    - "000725"  # 京东方A
+    - "002415"  # 海康威视
+    - "300059"  # 东方财富
+  
+  sector_limits:
+    "银行": 0.25      # 银行股最大25%
+    "白酒": 0.20      # 白酒股最大20%
+    "科技": 0.30      # 科技股最大30%
+    "地产": 0.15      # 地产股最大15%
+
+# 券商接口配置
+broker:
+  type: "mock"              # 券商类型: mock, eastmoney, etc.
+  account_id: ""            # 账户ID
+  password: ""              # 密码
+  api_endpoint: ""          # API端点
+  timeout: 30               # 请求超时时间
+  retry_times: 3            # 重试次数
+
+# 日志配置
+logging:
+  level: "INFO"             # 日志级别
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_path: "logs/trading.log"
+  max_file_size: "10MB"
+  backup_count: 5
+
+# 数据库配置
+database:
+  type: "sqlite"            # 数据库类型
+  path: "trading_data.db"   # 数据库文件路径
+  backup_enabled: true      # 启用备份
+  backup_interval: 3600     # 备份间隔 (秒)
+
+# 报警配置
+alerts:
+  enabled: true
+  channels:
+    - type: "email"
+      smtp_server: "smtp.qq.com"
+      smtp_port: 587
+      username: ""
+      password: ""
+      recipients: []
+    
+    - type: "wechat"
+      webhook_url: ""
+      
+    - type: "console"
+      enabled: true
+  
+  conditions:
+    - type: "stop_loss"
+      threshold: 0.03
+      severity: "HIGH"
+    
+    - type: "daily_loss"
+      threshold: 0.02
+      severity: "CRITICAL"
+    
+    - type: "system_error"
+      severity: "HIGH"
+    
+    - type: "data_feed_offline"
+      timeout: 300
+      severity: "MEDIUM"
+
+# 性能监控
+monitoring:
+  enabled: true
+  metrics:
+    - "total_return"
+    - "daily_return"
+    - "sharpe_ratio"
+    - "max_drawdown"
+    - "win_rate"
+    - "avg_holding_period"
+  
+  reporting:
+    daily_report: true
+    weekly_report: true
+    monthly_report: true
+    report_time: "17:00"
+
+# 回测验证
+backtesting:
+  validation_enabled: true      # 启用回测验证
+  validation_period: 30         # 验证期间 (天)
+  min_correlation: 0.8          # 最小相关性
+  max_deviation: 0.05           # 最大偏差
+
+# 纸面交易模式
+paper_trading:
+  enabled: false                # 启用纸面交易
+  initial_capital: 100000       # 虚拟资金
+  commission_rate: 0.002        # 手续费率
+  slippage: 0.001              # 滑点
+
+# 自动化交易开关
+automation:
+  auto_trading: false           # 自动交易开关
+  auto_rebalance: true          # 自动再平衡
+  emergency_stop: true          # 紧急停止功能
+  
+  stop_conditions:
+    - consecutive_losses: 5     # 连续亏损5次
+    - daily_loss_exceed: 0.03   # 日亏损超过3%
+    - system_error_rate: 0.1    # 系统错误率超过10%
+    - data_feed_offline: 600    # 数据中断超过10分钟
+
+# 策略优化
+optimization:
+  enabled: false                # 启用策略优化
+  optimization_interval: 7      # 优化间隔 (天)
+  lookback_period: 30          # 回看期间 (天)
+  
+  parameters:
+    buy_threshold:
+      min: 0.5
+      max: 0.8
+      step: 0.05
+    
+    sell_threshold:
+      min: 0.2
+      max: 0.5
+      step: 0.05
+    
+    position_size:
+      min: 0.05
+      max: 0.2
+      step: 0.01
+
+# 技术指标参数
+technical_indicators:
+  ma_short: 5                   # 短期均线
+  ma_long: 20                   # 长期均线
+  rsi_period: 14                # RSI周期
+  volume_ma_period: 5           # 成交量均线周期
+  volatility_period: 20         # 波动率计算周期
+
+# 市场状态检测
+market_regime:
+  enabled: true                 # 启用市场状态检测
+  bull_market_threshold: 0.1    # 牛市阈值
+  bear_market_threshold: -0.1   # 熊市阈值
+  volatility_threshold: 0.02    # 波动率阈值
+  
+  adjustments:
+    bull_market:
+      position_size_multiplier: 1.2
+      buy_threshold_adjustment: -0.05
+    
+    bear_market:
+      position_size_multiplier: 0.8
+      sell_threshold_adjustment: 0.05
+    
+    high_volatility:
+      position_size_multiplier: 0.7
+      stop_loss_tighter: 0.02
