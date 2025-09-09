@@ -5,10 +5,10 @@
 const DEV_API_BASE_URL = 'http://localhost:8000';
 
 // 生产环境API地址 (Railway部署)
-const PROD_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://auto-gpt-stock-production.up.railway.app';
+const PROD_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://autostockanalysis-production.up.railway.app';
 
 // GitHub Pages环境API地址
-const GITHUB_PAGES_API_URL = import.meta.env.VITE_API_BASE_URL || 'https://auto-gpt-stock-production.up.railway.app';
+const GITHUB_PAGES_API_URL = import.meta.env.VITE_API_BASE_URL || 'https://autostockanalysis-production.up.railway.app';
 
 /**
  * 获取API基础URL

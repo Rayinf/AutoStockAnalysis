@@ -47,9 +47,25 @@ except Exception:
 
 app = FastAPI(title="Auto-GPT-Stock API", version="0.1.0")
 
+# CORS配置 - 允许GitHub Pages和本地开发访问
+if ENVIRONMENT == 'production':
+    # 生产环境：允许GitHub Pages域名和Railway域名
+    cors_origins = [
+        "https://rayinf.github.io",  # GitHub Pages域名
+        "https://autostockanalysis-production.up.railway.app",  # Railway域名
+        "http://localhost:5173",  # 本地开发
+        "http://127.0.0.1:5173",  # 本地开发
+    ]
+    # 如果设置了ALLOWED_ORIGINS环境变量，则合并使用
+    if ALLOWED_ORIGINS != ['*']:
+        cors_origins.extend(ALLOWED_ORIGINS)
+else:
+    # 开发环境：允许所有来源
+    cors_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS if ENVIRONMENT == 'production' else ["*"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
