@@ -5,7 +5,7 @@ import StockPoolPanel from './StockPoolPanel'
 import OpeningPrediction from './OpeningPrediction'
 import PortfolioManager from './PortfolioManager'
 import ReactECharts from 'echarts-for-react'
-import { getApiBaseUrl, buildApiUrl } from './config/api'
+import { getApiBaseUrl } from './config/api'
 
 type Mode = 'auto' | 'quick' | 'llm'
 type Tab = 'fixed' | 'llm' | 'strategy' | 'prediction' | 'portfolio'
